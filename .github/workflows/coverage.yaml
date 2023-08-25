@@ -19,12 +19,12 @@ jobs:
         run: go test -v ./...
 
       - name: Update coverage report
-        uses: ncruces/go-coverage-report@v0
+        uses: ncruces/go-coverage-report@v0.1.10
         with:
-          report: 'false'
+          report: 'true'
           chart: 'false'
           amend: 'false'
         if: |
           matrix.os == 'ubuntu-latest' &&
           github.event_name == 'push'
-        continue-on-error: true
+        continue-on-error: false
