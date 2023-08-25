@@ -1,5 +1,5 @@
-# fungo
-FUNGO stands for FUNctional programming in GO(lang)
+# 🍄 FunGo 🍄
+FunGo stands for Functional (programming in) Go(lang)
 
 ## How to use
 
