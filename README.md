@@ -1,4 +1,4 @@
-[![Go Coverage](https://github.com/gabrielseibel1/fungo/wiki/coverage.svg)](https://raw.githack.com/wiki/gabrielseibel1/fungo/coverage.html)
+<a href='https://github.com/jpoles1/gopherbadger' target='_blank'>![gopherbadger-tag-do-not-edit](https://img.shields.io/badge/Go%20Coverage-100%25-brightgreen.svg?longCache=true&style=flat)</a>
 [![Go package](https://github.com/gabrielseibel1/fungo/actions/workflows/coverage.yaml/badge.svg)](https://github.com/gabrielseibel1/fungo/actions/workflows/coverage.yaml)
 
 # 🍄 FunGo 🍄
