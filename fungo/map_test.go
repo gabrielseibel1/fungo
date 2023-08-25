@@ -1,11 +1,63 @@
-package fungomap
+package fungo
 
 import (
-	"fungo/util"
 	"reflect"
 	"strconv"
 	"testing"
 )
+
+func TestMapped(t *testing.T) {
+	type args[T any, U any] struct {
+		s []T
+		f func(T) U
+	}
+	type testCase[T any, U any] struct {
+		name string
+		args args[T, U]
+		want []U
+	}
+	tests := []testCase[Data, Record]{
+		{
+			name: "empty",
+			args: args[Data, Record]{
+				s: []Data{},
+				f: DataToRecord,
+			},
+			want: []Record{},
+		},
+		{
+			name: "nil",
+			args: args[Data, Record]{
+				s: nil,
+				f: DataToRecord,
+			},
+			want: []Record{},
+		},
+		{
+			name: "one",
+			args: args[Data, Record]{
+				s: []Data{Data1},
+				f: DataToRecord,
+			},
+			want: []Record{Record1},
+		},
+		{
+			name: "two",
+			args: args[Data, Record]{
+				s: []Data{Data1, Data2},
+				f: DataToRecord,
+			},
+			want: []Record{Record1, Record2},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Mapped(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Mapped() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestMappedK(t *testing.T) {
 	type args[T comparable, V any, U comparable] struct {
@@ -17,22 +69,22 @@ func TestMappedK(t *testing.T) {
 		args args[T, V, U]
 		want map[U]V
 	}
-	tests := []testCase[int, util.Data, string]{
+	tests := []testCase[int, Data, string]{
 		{
 			name: "empty",
-			args: args[int, util.Data, string]{
+			args: args[int, Data, string]{
 				m: nil,
 				f: nil,
 			},
-			want: map[string]util.Data{},
+			want: map[string]Data{},
 		},
 		{
 			name: "itoa",
-			args: args[int, util.Data, string]{
-				m: map[int]util.Data{1: util.Data1, 2: util.Data2},
+			args: args[int, Data, string]{
+				m: map[int]Data{1: Data1, 2: Data2},
 				f: strconv.Itoa,
 			},
-			want: map[string]util.Data{"1": util.Data1, "2": util.Data2},
+			want: map[string]Data{"1": Data1, "2": Data2},
 		},
 	}
 	for _, tt := range tests {

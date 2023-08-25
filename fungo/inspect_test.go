@@ -1,9 +1,98 @@
-package fungomap
+package fungo
 
 import (
-	"fungo/util"
 	"testing"
 )
+
+func TestSome(t *testing.T) {
+	type args[T any] struct {
+		s []T
+		f func(T) bool
+	}
+	type testCase[T any] struct {
+		name string
+		args args[T]
+		want bool
+	}
+	tests := []testCase[Data]{
+		{
+			name: "empty/nil",
+			args: args[Data]{
+				s: nil,
+				f: PassAll[Data],
+			},
+			want: false,
+		},
+		{
+			name: "some",
+			args: args[Data]{
+				s: []Data{Data1, Data2},
+				f: Is(Data1),
+			},
+			want: true,
+		},
+		{
+			name: "none",
+			args: args[Data]{
+				s: []Data{Data1, Data2},
+				f: PassNo[Data],
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Some(tt.args.s, tt.args.f); got != tt.want {
+				t.Errorf("Some() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNone(t *testing.T) {
+	type args[T any] struct {
+		s []T
+		f func(T) bool
+	}
+	type testCase[T any] struct {
+		name string
+		args args[T]
+		want bool
+	}
+	tests := []testCase[Data]{
+		{
+			name: "empty/nil",
+			args: args[Data]{
+				s: nil,
+				f: PassAll[Data],
+			},
+			want: true,
+		},
+		{
+			name: "some",
+			args: args[Data]{
+				s: []Data{Data1, Data2},
+				f: Is(Data1),
+			},
+			want: false,
+		},
+		{
+			name: "none",
+			args: args[Data]{
+				s: []Data{Data1, Data2},
+				f: PassNo[Data],
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := None(tt.args.s, tt.args.f); got != tt.want {
+				t.Errorf("Some() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestNoK(t *testing.T) {
 	type args[T comparable, U any] struct {
@@ -20,7 +109,7 @@ func TestNoK(t *testing.T) {
 			name: "empty",
 			args: args[string, int]{
 				m: nil,
-				f: util.PassAll[string],
+				f: PassAll[string],
 			},
 			want: true,
 		},
@@ -28,7 +117,7 @@ func TestNoK(t *testing.T) {
 			name: "some",
 			args: args[string, int]{
 				m: map[string]int{"1": 1, "b": 2},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: false,
 		},
@@ -36,7 +125,7 @@ func TestNoK(t *testing.T) {
 			name: "none",
 			args: args[string, int]{
 				m: map[string]int{"a": 1, "b": 2},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: true,
 		},
@@ -65,7 +154,7 @@ func TestNoV(t *testing.T) {
 			name: "empty",
 			args: args[int, string]{
 				m: nil,
-				f: util.PassAll[string],
+				f: PassAll[string],
 			},
 			want: true,
 		},
@@ -73,7 +162,7 @@ func TestNoV(t *testing.T) {
 			name: "some",
 			args: args[int, string]{
 				m: map[int]string{1: "1", 2: "b"},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: false,
 		},
@@ -81,7 +170,7 @@ func TestNoV(t *testing.T) {
 			name: "nome",
 			args: args[int, string]{
 				m: map[int]string{1: "a", 2: "b"},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: true,
 		},
@@ -110,7 +199,7 @@ func TestSomeK(t *testing.T) {
 			name: "empty",
 			args: args[string, int]{
 				m: nil,
-				f: util.PassAll[string],
+				f: PassAll[string],
 			},
 			want: false,
 		},
@@ -118,7 +207,7 @@ func TestSomeK(t *testing.T) {
 			name: "some",
 			args: args[string, int]{
 				m: map[string]int{"1": 1, "b": 2},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: true,
 		},
@@ -126,7 +215,7 @@ func TestSomeK(t *testing.T) {
 			name: "none",
 			args: args[string, int]{
 				m: map[string]int{"a": 1, "b": 2},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: false,
 		},
@@ -155,7 +244,7 @@ func TestSomeV(t *testing.T) {
 			name: "empty",
 			args: args[int, string]{
 				m: nil,
-				f: util.PassAll[string],
+				f: PassAll[string],
 			},
 			want: false,
 		},
@@ -163,7 +252,7 @@ func TestSomeV(t *testing.T) {
 			name: "some",
 			args: args[int, string]{
 				m: map[int]string{1: "1", 2: "b"},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: true,
 		},
@@ -171,7 +260,7 @@ func TestSomeV(t *testing.T) {
 			name: "nome",
 			args: args[int, string]{
 				m: map[int]string{1: "a", 2: "b"},
-				f: util.IsNumber,
+				f: IsNumber,
 			},
 			want: false,
 		},
