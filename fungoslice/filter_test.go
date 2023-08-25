@@ -20,7 +20,7 @@ func TestFiltered(t *testing.T) {
 		{
 			name: "empty",
 			args: args[util.Data]{
-				f: util.PassAllData,
+				f: util.PassAll[util.Data],
 			},
 			want: []util.Data{},
 		},
@@ -28,7 +28,7 @@ func TestFiltered(t *testing.T) {
 			name: "one element (1), pass all",
 			args: args[util.Data]{
 				s: []util.Data{util.Data1},
-				f: util.PassAllData,
+				f: util.PassAll[util.Data],
 			},
 			want: []util.Data{util.Data1},
 		},
@@ -36,7 +36,7 @@ func TestFiltered(t *testing.T) {
 			name: "one element (2), pass all",
 			args: args[util.Data]{
 				s: []util.Data{util.Data1},
-				f: util.PassAllData,
+				f: util.PassAll[util.Data],
 			},
 			want: []util.Data{util.Data1},
 		},
@@ -44,7 +44,7 @@ func TestFiltered(t *testing.T) {
 			name: "two elements, pass all",
 			args: args[util.Data]{
 				s: []util.Data{util.Data1, util.Data2},
-				f: util.PassAllData,
+				f: util.PassAll[util.Data],
 			},
 			want: []util.Data{util.Data1, util.Data2},
 		},
@@ -52,7 +52,7 @@ func TestFiltered(t *testing.T) {
 			name: "two elements, pass none",
 			args: args[util.Data]{
 				s: []util.Data{util.Data1, util.Data2},
-				f: util.PassNoData,
+				f: util.PassNo[util.Data],
 			},
 			want: []util.Data{},
 		},
@@ -60,13 +60,7 @@ func TestFiltered(t *testing.T) {
 			name: "two elements, pass first",
 			args: args[util.Data]{
 				s: []util.Data{util.Data1, util.Data2},
-				f: func(d util.Data) bool {
-					if d.V == util.Data1.V {
-						return true
-					} else {
-						return false
-					}
-				},
+				f: util.Is(util.Data1),
 			},
 			want: []util.Data{util.Data1},
 		},
@@ -74,13 +68,7 @@ func TestFiltered(t *testing.T) {
 			name: "two elements, pass second",
 			args: args[util.Data]{
 				s: []util.Data{util.Data1, util.Data2},
-				f: func(d util.Data) bool {
-					if d.V == util.Data2.V {
-						return true
-					} else {
-						return false
-					}
-				},
+				f: util.Is(util.Data2),
 			},
 			want: []util.Data{util.Data2},
 		},

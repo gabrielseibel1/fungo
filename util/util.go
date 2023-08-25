@@ -1,5 +1,10 @@
 package util
 
+import (
+	"reflect"
+	"strconv"
+)
+
 type Data struct {
 	V string
 	S []Data
@@ -32,9 +37,15 @@ var (
 	}
 )
 
-func PassAllData(Data) bool { return true }
+func PassAll[T any](T) bool { return true }
 
-func PassNoData(Data) bool { return false }
+func PassNo[T any](T) bool { return false }
+
+func Is[T any](t T) func(T) bool {
+	return func(u T) bool {
+		return reflect.DeepEqual(t, u)
+	}
+}
 
 func DataToRecord(d Data) Record {
 	if d.V == Data1.V {
@@ -44,4 +55,9 @@ func DataToRecord(d Data) Record {
 	} else {
 		return Record{}
 	}
+}
+
+func IsNumber(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
 }
