@@ -74,8 +74,8 @@ func TestFiltered(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Filtered(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Filtered() = %v, want %v", got, tt.want)
+			if got := FilteredS(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FilteredS() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -116,8 +116,8 @@ func TestFilteredByK(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilteredByK(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FilteredByV() = %v, want %v", got, tt.want)
+			if got := FilteredMByK(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FilteredMByV() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -158,9 +158,44 @@ func TestFilteredByV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilteredByV(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FilteredByV() = %v, want %v", got, tt.want)
+			if got := FilteredMByV(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FilteredMByV() = %v, want %v", got, tt.want)
 			}
 		})
 	}
+}
+
+func TestFilteredC(t *testing.T) {
+	putX := func(c chan<- int, x int) {
+		for i := 0; i < x; i++ {
+			c <- i
+		}
+		close(c)
+	}
+	t.Run("filter even", func(t *testing.T) {
+		unfiltered := make(chan int)
+		filtered := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
+		go func() { putX(unfiltered, 4) }()
+		i := 0
+		for e := range filtered {
+			if e != i {
+				t.Errorf("expected filtered element to be %d, got %d", i, e)
+			}
+			i += 2
+		}
+	})
+	t.Run("filter even then div by 4", func(t *testing.T) {
+		unfiltered := make(chan int)
+		filtered1 := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered2 := FilteredC(filtered1, func(i int) bool { return i%4 == 0 })
+		go func() { putX(unfiltered, 21) }()
+		i := 0
+		for e := range filtered2 {
+			if e != i {
+				t.Errorf("expected filtered element to be %d, got %d", i, e)
+			}
+			i += 4
+		}
+	})
+	// TODO test buffered
 }
