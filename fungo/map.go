@@ -1,10 +1,21 @@
 package fungo
 
-func Mapped[T, U any](s []T, f func(T) U) []U {
+func MappedS[T, U any](s []T, f func(T) U) []U {
 	r := make([]U, len(s))
 	for i := range r {
 		r[i] = f(s[i])
 	}
+	return r
+}
+
+func MappedC[T any, U any](c <-chan T, f func(T) U) chan U {
+	r := make(chan U)
+	go func(in <-chan T, out chan<- U) {
+		for e := range in {
+			out <- f(e)
+		}
+		close(out)
+	}(c, r)
 	return r
 }
 

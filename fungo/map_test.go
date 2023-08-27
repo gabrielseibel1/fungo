@@ -52,8 +52,8 @@ func TestMapped(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Mapped(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Mapped() = %v, want %v", got, tt.want)
+			if got := MappedS(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MappedS() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -131,4 +131,33 @@ func TestMappedV(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestMappedC(t *testing.T) {
+	putX := func(c chan<- int, x int) {
+		for i := 0; i < x; i++ {
+			c <- i
+		}
+		close(c)
+	}
+	t.Run("empty", func(t *testing.T) {
+		o := make(chan int)
+		m := MappedC(o, func(i int) bool { return i%2 == 0 })
+		go func() { putX(o, 0) }()
+		for e := range m {
+			t.Errorf("expected no elements, got element %t", e)
+		}
+	})
+	t.Run("map to is even", func(t *testing.T) {
+		o := make(chan int)
+		m := MappedC(o, func(i int) bool { return i%2 == 0 })
+		go func() { putX(o, 10) }()
+		even := true
+		for e := range m {
+			if e != even {
+				t.Errorf("expected filtered element to be %t, got %t", even, e)
+			}
+			even = !even
+		}
+	})
 }

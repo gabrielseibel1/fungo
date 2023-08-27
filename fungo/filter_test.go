@@ -172,6 +172,14 @@ func TestFilteredC(t *testing.T) {
 		}
 		close(c)
 	}
+	t.Run("empty", func(t *testing.T) {
+		unfiltered := make(chan int)
+		filtered := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
+		go func() { putX(unfiltered, 0) }()
+		for e := range filtered {
+			t.Errorf("expected no elements, got element %d", e)
+		}
+	})
 	t.Run("filter even", func(t *testing.T) {
 		unfiltered := make(chan int)
 		filtered := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
