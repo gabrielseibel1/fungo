@@ -1,3 +1,4 @@
+![Coverage](https://raw.githubusercontent.com/gabrielseibel1/fungo/badges/.badges/main/coverage.svg)
 [![Tests](https://github.com/gabrielseibel1/fungo/actions/workflows/tests.yaml/badge.svg)](https://github.com/gabrielseibel1/fungo/actions/workflows/tests.yaml)
 
 # 🍄 FunGo 🍄
