@@ -1,7 +1,6 @@
-
 name: Tests
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -17,6 +16,11 @@ jobs:
 
       - name: Verify
         run: make
+
+      - name: Set up static analysis
+        run: |
+          sudo apt update
+          go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: Check test coverage
         id: coverage
