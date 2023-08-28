@@ -1,6 +1,6 @@
-package fungo
+package filter
 
-func FilteredS[T any](s []T, f func(T) bool) []T {
+func Slice[T any](s []T, f func(T) bool) []T {
 	r := make([]T, 0)
 	for _, v := range s {
 		if f(v) {
@@ -10,7 +10,7 @@ func FilteredS[T any](s []T, f func(T) bool) []T {
 	return r
 }
 
-func FilteredC[T any](c <-chan T, f func(T) bool) chan T {
+func Channel[T any](c <-chan T, f func(T) bool) chan T {
 	r := make(chan T)
 	go func(in <-chan T, out chan<- T) {
 		for e := range in {
@@ -23,7 +23,7 @@ func FilteredC[T any](c <-chan T, f func(T) bool) chan T {
 	return r
 }
 
-func FilteredMByK[T comparable, U any](m map[T]U, f func(T) bool) map[T]U {
+func MapByKeys[T comparable, U any](m map[T]U, f func(T) bool) map[T]U {
 	r := make(map[T]U)
 	for k, v := range m {
 		if f(k) {
@@ -33,7 +33,7 @@ func FilteredMByK[T comparable, U any](m map[T]U, f func(T) bool) map[T]U {
 	return r
 }
 
-func FilteredMByV[T comparable, U any](m map[T]U, f func(U) bool) map[T]U {
+func MapByValues[T comparable, U any](m map[T]U, f func(U) bool) map[T]U {
 	r := make(map[T]U)
 	for k, v := range m {
 		if f(v) {

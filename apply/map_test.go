@@ -1,6 +1,7 @@
-package fungo
+package apply
 
 import (
+	"github.com/gabrielseibel1/fungo/util"
 	"reflect"
 	"strconv"
 	"testing"
@@ -16,44 +17,44 @@ func TestMapped(t *testing.T) {
 		args args[T, U]
 		want []U
 	}
-	tests := []testCase[Data, Record]{
+	tests := []testCase[util.Data, util.Record]{
 		{
 			name: "empty",
-			args: args[Data, Record]{
-				s: []Data{},
-				f: DataToRecord,
+			args: args[util.Data, util.Record]{
+				s: []util.Data{},
+				f: util.DataToRecord,
 			},
-			want: []Record{},
+			want: []util.Record{},
 		},
 		{
 			name: "nil",
-			args: args[Data, Record]{
+			args: args[util.Data, util.Record]{
 				s: nil,
-				f: DataToRecord,
+				f: util.DataToRecord,
 			},
-			want: []Record{},
+			want: []util.Record{},
 		},
 		{
 			name: "one",
-			args: args[Data, Record]{
-				s: []Data{Data1},
-				f: DataToRecord,
+			args: args[util.Data, util.Record]{
+				s: []util.Data{util.Data1},
+				f: util.DataToRecord,
 			},
-			want: []Record{Record1},
+			want: []util.Record{util.Record1},
 		},
 		{
 			name: "two",
-			args: args[Data, Record]{
-				s: []Data{Data1, Data2},
-				f: DataToRecord,
+			args: args[util.Data, util.Record]{
+				s: []util.Data{util.Data1, util.Data2},
+				f: util.DataToRecord,
 			},
-			want: []Record{Record1, Record2},
+			want: []util.Record{util.Record1, util.Record2},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MappedS(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MappedS() = %v, want %v", got, tt.want)
+			if got := ToSlice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToSlice() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -69,28 +70,28 @@ func TestMappedK(t *testing.T) {
 		args args[T, V, U]
 		want map[U]V
 	}
-	tests := []testCase[int, Data, string]{
+	tests := []testCase[int, util.Data, string]{
 		{
 			name: "empty",
-			args: args[int, Data, string]{
+			args: args[int, util.Data, string]{
 				m: nil,
 				f: nil,
 			},
-			want: map[string]Data{},
+			want: map[string]util.Data{},
 		},
 		{
 			name: "itoa",
-			args: args[int, Data, string]{
-				m: map[int]Data{1: Data1, 2: Data2},
+			args: args[int, util.Data, string]{
+				m: map[int]util.Data{1: util.Data1, 2: util.Data2},
 				f: strconv.Itoa,
 			},
-			want: map[string]Data{"1": Data1, "2": Data2},
+			want: map[string]util.Data{"1": util.Data1, "2": util.Data2},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MappedK(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MappedK() = %v, want %v", got, tt.want)
+			if got := ToKeys(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToKeys() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -126,8 +127,8 @@ func TestMappedV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MappedV(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MappedV() = %v, want %v", got, tt.want)
+			if got := ToValues(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToValues() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -142,7 +143,7 @@ func TestMappedC(t *testing.T) {
 	}
 	t.Run("empty", func(t *testing.T) {
 		o := make(chan int)
-		m := MappedC(o, func(i int) bool { return i%2 == 0 })
+		m := ToChannel(o, func(i int) bool { return i%2 == 0 })
 		go func() { putX(o, 0) }()
 		for e := range m {
 			t.Errorf("expected no elements, got element %t", e)
@@ -150,7 +151,7 @@ func TestMappedC(t *testing.T) {
 	})
 	t.Run("map to is even", func(t *testing.T) {
 		o := make(chan int)
-		m := MappedC(o, func(i int) bool { return i%2 == 0 })
+		m := ToChannel(o, func(i int) bool { return i%2 == 0 })
 		go func() { putX(o, 10) }()
 		even := true
 		for e := range m {

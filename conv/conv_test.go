@@ -1,4 +1,4 @@
-package fungo
+package conv
 
 import (
 	"reflect"
@@ -41,8 +41,8 @@ func TestToMapI(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToMapI(tt.args.s); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ToMapI() = %v, want %v", got, tt.want)
+			if got := SliceToMapWithIndices(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SliceToMapWithIndices() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -78,8 +78,8 @@ func TestToMapK(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToMapK(tt.args.s, tt.args.v); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ToMapK() = %v, want %v", got, tt.want)
+			if got := SliceToMapKeys(tt.args.s, tt.args.v); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SliceToMapKeys() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -115,8 +115,8 @@ func TestToMapV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToMapV(tt.args.s, tt.args.k); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ToMapV() = %v, want %v", got, tt.want)
+			if got := SliceToMapValues(tt.args.s, tt.args.k); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SliceToMapValues() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -156,11 +156,11 @@ func TestToSliceK(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToSliceK(tt.args.m)
+			got := MapKeysToSlice(tt.args.m)
 			slices.Sort(tt.want)
 			slices.Sort(got)
 			if !slices.Equal(got, tt.want) {
-				t.Errorf("ToSliceK() = %v, want %v", got, tt.want)
+				t.Errorf("MapKeysToSlice() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -200,11 +200,11 @@ func TestToSliceV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToSliceV(tt.args.m)
+			got := MapValuesToSlice(tt.args.m)
 			slices.Sort(tt.want)
 			slices.Sort(got)
 			if !slices.Equal(got, tt.want) {
-				t.Errorf("ToSliceV() = %v, want %v", got, tt.want)
+				t.Errorf("MapValuesToSlice() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -244,7 +244,7 @@ func TestToSliceP(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToSliceP(tt.args.m)
+			got := MapToPairs(tt.args.m)
 			f := func(a, b Pair[string, int]) int {
 				if a.K < b.K {
 					return -1
@@ -257,7 +257,7 @@ func TestToSliceP(t *testing.T) {
 			slices.SortFunc(tt.want, f)
 			slices.SortFunc(got, f)
 			if !slices.Equal(got, tt.want) {
-				t.Errorf("ToSliceP() = %v, want %v", got, tt.want)
+				t.Errorf("MapToPairs() = %v, want %v", got, tt.want)
 			}
 		})
 	}

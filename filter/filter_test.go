@@ -1,6 +1,7 @@
-package fungo
+package filter
 
 import (
+	"github.com/gabrielseibel1/fungo/util"
 	"reflect"
 	"testing"
 )
@@ -15,67 +16,67 @@ func TestFiltered(t *testing.T) {
 		args args[T]
 		want []T
 	}
-	tests := []testCase[Data]{
+	tests := []testCase[util.Data]{
 		{
 			name: "empty",
-			args: args[Data]{
-				f: PassAll[Data],
+			args: args[util.Data]{
+				f: util.PassAll[util.Data],
 			},
-			want: []Data{},
+			want: []util.Data{},
 		},
 		{
 			name: "one element (1), pass all",
-			args: args[Data]{
-				s: []Data{Data1},
-				f: PassAll[Data],
+			args: args[util.Data]{
+				s: []util.Data{util.Data1},
+				f: util.PassAll[util.Data],
 			},
-			want: []Data{Data1},
+			want: []util.Data{util.Data1},
 		},
 		{
 			name: "one element (2), pass all",
-			args: args[Data]{
-				s: []Data{Data1},
-				f: PassAll[Data],
+			args: args[util.Data]{
+				s: []util.Data{util.Data1},
+				f: util.PassAll[util.Data],
 			},
-			want: []Data{Data1},
+			want: []util.Data{util.Data1},
 		},
 		{
 			name: "two elements, pass all",
-			args: args[Data]{
-				s: []Data{Data1, Data2},
-				f: PassAll[Data],
+			args: args[util.Data]{
+				s: []util.Data{util.Data1, util.Data2},
+				f: util.PassAll[util.Data],
 			},
-			want: []Data{Data1, Data2},
+			want: []util.Data{util.Data1, util.Data2},
 		},
 		{
 			name: "two elements, pass none",
-			args: args[Data]{
-				s: []Data{Data1, Data2},
-				f: PassNo[Data],
+			args: args[util.Data]{
+				s: []util.Data{util.Data1, util.Data2},
+				f: util.PassNo[util.Data],
 			},
-			want: []Data{},
+			want: []util.Data{},
 		},
 		{
 			name: "two elements, pass first",
-			args: args[Data]{
-				s: []Data{Data1, Data2},
-				f: Is(Data1),
+			args: args[util.Data]{
+				s: []util.Data{util.Data1, util.Data2},
+				f: util.Is(util.Data1),
 			},
-			want: []Data{Data1},
+			want: []util.Data{util.Data1},
 		},
 		{
 			name: "two elements, pass second",
-			args: args[Data]{
-				s: []Data{Data1, Data2},
-				f: Is(Data2),
+			args: args[util.Data]{
+				s: []util.Data{util.Data1, util.Data2},
+				f: util.Is(util.Data2),
 			},
-			want: []Data{Data2},
+			want: []util.Data{util.Data2},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilteredS(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FilteredS() = %v, want %v", got, tt.want)
+			if got := Slice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Slice() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -91,19 +92,19 @@ func TestFilteredByK(t *testing.T) {
 		args args[T, U]
 		want map[T]U
 	}
-	tests := []testCase[string, Data]{
+	tests := []testCase[string, util.Data]{
 		{
 			name: "empty/nil",
-			args: args[string, Data]{
+			args: args[string, util.Data]{
 				m: nil,
 				f: nil,
 			},
-			want: map[string]Data{},
+			want: map[string]util.Data{},
 		},
 		{
 			name: "remove data 1",
-			args: args[string, Data]{
-				m: map[string]Data{"data1": Data1, "data2": Data2},
+			args: args[string, util.Data]{
+				m: map[string]util.Data{"data1": util.Data1, "data2": util.Data2},
 				f: func(s string) bool {
 					if s == "data1" {
 						return false
@@ -111,13 +112,13 @@ func TestFilteredByK(t *testing.T) {
 					return true
 				},
 			},
-			want: map[string]Data{"data2": Data2},
+			want: map[string]util.Data{"data2": util.Data2},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilteredMByK(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FilteredMByV() = %v, want %v", got, tt.want)
+			if got := MapByKeys(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MapByValues() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -133,33 +134,33 @@ func TestFilteredByV(t *testing.T) {
 		args args[T, U]
 		want map[T]U
 	}
-	tests := []testCase[string, Data]{
+	tests := []testCase[string, util.Data]{
 		{
 			name: "empty/nil",
-			args: args[string, Data]{
+			args: args[string, util.Data]{
 				m: nil,
 				f: nil,
 			},
-			want: map[string]Data{},
+			want: map[string]util.Data{},
 		},
 		{
 			name: "remove data 1",
-			args: args[string, Data]{
-				m: map[string]Data{"data1": Data1, "data2": Data2},
-				f: func(data Data) bool {
-					if data.V == Data1.V {
+			args: args[string, util.Data]{
+				m: map[string]util.Data{"data1": util.Data1, "data2": util.Data2},
+				f: func(data util.Data) bool {
+					if data.V == util.Data1.V {
 						return false
 					}
 					return true
 				},
 			},
-			want: map[string]Data{"data2": Data2},
+			want: map[string]util.Data{"data2": util.Data2},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilteredMByV(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FilteredMByV() = %v, want %v", got, tt.want)
+			if got := MapByValues(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MapByValues() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -174,7 +175,7 @@ func TestFilteredC(t *testing.T) {
 	}
 	t.Run("empty", func(t *testing.T) {
 		unfiltered := make(chan int)
-		filtered := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered := Channel(unfiltered, func(i int) bool { return i%2 == 0 })
 		go func() { putX(unfiltered, 0) }()
 		for e := range filtered {
 			t.Errorf("expected no elements, got element %d", e)
@@ -182,7 +183,7 @@ func TestFilteredC(t *testing.T) {
 	})
 	t.Run("filter even", func(t *testing.T) {
 		unfiltered := make(chan int)
-		filtered := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered := Channel(unfiltered, func(i int) bool { return i%2 == 0 })
 		go func() { putX(unfiltered, 4) }()
 		i := 0
 		for e := range filtered {
@@ -194,8 +195,8 @@ func TestFilteredC(t *testing.T) {
 	})
 	t.Run("filter even then div by 4", func(t *testing.T) {
 		unfiltered := make(chan int)
-		filtered1 := FilteredC(unfiltered, func(i int) bool { return i%2 == 0 })
-		filtered2 := FilteredC(filtered1, func(i int) bool { return i%4 == 0 })
+		filtered1 := Channel(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered2 := Channel(filtered1, func(i int) bool { return i%4 == 0 })
 		go func() { putX(unfiltered, 21) }()
 		i := 0
 		for e := range filtered2 {

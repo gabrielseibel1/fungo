@@ -1,4 +1,4 @@
-package fungo
+package util
 
 import (
 	"reflect"

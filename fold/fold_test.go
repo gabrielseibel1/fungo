@@ -1,4 +1,4 @@
-package fungo
+package fold
 
 import (
 	"math"
@@ -67,8 +67,8 @@ func TestFold(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Fold(tt.args.s, tt.args.i, tt.args.f); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Fold() = %v, want %v", got, tt.want)
+			if got := Slice(tt.args.s, tt.args.i, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Slice() = %v, want %v", got, tt.want)
 			}
 		})
 	}

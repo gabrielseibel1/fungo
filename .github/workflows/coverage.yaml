@@ -15,5 +15,5 @@ jobs:
         with:
           go-version: '1.21'
 
-      - name: Test
-        run: go test --count 1 --cover -v ./...
+      - name: Verify
+        run: make
