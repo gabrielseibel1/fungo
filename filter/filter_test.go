@@ -106,10 +106,7 @@ func TestFilteredByK(t *testing.T) {
 			args: args[string, util.Data]{
 				m: map[string]util.Data{"data1": util.Data1, "data2": util.Data2},
 				f: func(s string) bool {
-					if s == "data1" {
-						return false
-					}
-					return true
+					return s != "data1"
 				},
 			},
 			want: map[string]util.Data{"data2": util.Data2},
@@ -148,10 +145,7 @@ func TestFilteredByV(t *testing.T) {
 			args: args[string, util.Data]{
 				m: map[string]util.Data{"data1": util.Data1, "data2": util.Data2},
 				f: func(data util.Data) bool {
-					if data.V == util.Data1.V {
-						return false
-					}
-					return true
+					return data.V != util.Data1.V
 				},
 			},
 			want: map[string]util.Data{"data2": util.Data2},
