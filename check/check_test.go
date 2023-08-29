@@ -95,7 +95,7 @@ func TestNone(t *testing.T) {
 	}
 }
 
-func TestNoK(t *testing.T) {
+func TestNoKey(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 		f func(T) bool
@@ -140,7 +140,7 @@ func TestNoK(t *testing.T) {
 	}
 }
 
-func TestNoV(t *testing.T) {
+func TestNoValue(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 		f func(U) bool
@@ -185,7 +185,7 @@ func TestNoV(t *testing.T) {
 	}
 }
 
-func TestSomeK(t *testing.T) {
+func TestSomeKey(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 		f func(T) bool
@@ -230,7 +230,7 @@ func TestSomeK(t *testing.T) {
 	}
 }
 
-func TestSomeV(t *testing.T) {
+func TestSomeValue(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 		f func(U) bool

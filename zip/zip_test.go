@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestZip(t *testing.T) {
+func TestSlicesToPairs(t *testing.T) {
 	type args[T any, U any] struct {
 		t []T
 		u []U

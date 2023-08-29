@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestFiltered(t *testing.T) {
+func TestSlice(t *testing.T) {
 	type args[T any] struct {
 		s []T
 		f func(T) bool
@@ -82,7 +82,7 @@ func TestFiltered(t *testing.T) {
 	}
 }
 
-func TestFilteredByK(t *testing.T) {
+func TestMapByKeys(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 		f func(T) bool
@@ -121,7 +121,7 @@ func TestFilteredByK(t *testing.T) {
 	}
 }
 
-func TestFilteredByV(t *testing.T) {
+func TestMapByValues(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 		f func(U) bool
@@ -160,7 +160,7 @@ func TestFilteredByV(t *testing.T) {
 	}
 }
 
-func TestFilteredC(t *testing.T) {
+func TestChannel(t *testing.T) {
 	putX := func(c chan<- int, x int) {
 		for i := 0; i < x; i++ {
 			c <- i

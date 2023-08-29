@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestToMapI(t *testing.T) {
+func TestSliceToMapWithIndices(t *testing.T) {
 	type args[T any] struct {
 		s []T
 	}
@@ -48,7 +48,7 @@ func TestToMapI(t *testing.T) {
 	}
 }
 
-func TestToMapK(t *testing.T) {
+func TestSliceToMapKeys(t *testing.T) {
 	type args[T comparable, U any] struct {
 		s []T
 		v func(T) U
@@ -85,7 +85,7 @@ func TestToMapK(t *testing.T) {
 	}
 }
 
-func TestToMapV(t *testing.T) {
+func TestSliceToMapValues(t *testing.T) {
 	type args[T any, U comparable] struct {
 		s []T
 		k func(T) U
@@ -122,7 +122,7 @@ func TestToMapV(t *testing.T) {
 	}
 }
 
-func TestToSliceK(t *testing.T) {
+func TestMapKeysToSlice(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 	}
@@ -166,7 +166,7 @@ func TestToSliceK(t *testing.T) {
 	}
 }
 
-func TestToSliceV(t *testing.T) {
+func TestMapValuesToSlice(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 	}
@@ -210,7 +210,7 @@ func TestToSliceV(t *testing.T) {
 	}
 }
 
-func TestToSliceP(t *testing.T) {
+func TestMapToPairs(t *testing.T) {
 	type args[T comparable, U any] struct {
 		m map[T]U
 	}

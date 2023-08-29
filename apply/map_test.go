@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestMapped(t *testing.T) {
+func TestToSlice(t *testing.T) {
 	type args[T any, U any] struct {
 		s []T
 		f func(T) U
@@ -60,7 +60,7 @@ func TestMapped(t *testing.T) {
 	}
 }
 
-func TestMappedK(t *testing.T) {
+func TestToKeys(t *testing.T) {
 	type args[T comparable, V any, U comparable] struct {
 		m map[T]V
 		f func(T) U
@@ -97,7 +97,7 @@ func TestMappedK(t *testing.T) {
 	}
 }
 
-func TestMappedV(t *testing.T) {
+func TestToValues(t *testing.T) {
 	type args[T comparable, U any, V any] struct {
 		m map[T]U
 		f func(U) V
@@ -134,7 +134,7 @@ func TestMappedV(t *testing.T) {
 	}
 }
 
-func TestMappedC(t *testing.T) {
+func TestToChannel(t *testing.T) {
 	putX := func(c chan<- int, x int) {
 		for i := 0; i < x; i++ {
 			c <- i

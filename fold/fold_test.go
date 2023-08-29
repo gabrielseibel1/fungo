@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestFold(t *testing.T) {
+func TestSlice(t *testing.T) {
 	type args[T any, U any] struct {
 		s []T
 		i U
