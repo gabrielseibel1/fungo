@@ -6,11 +6,13 @@ import (
 	"github.com/gabrielseibel1/fungo/conv"
 	"github.com/gabrielseibel1/fungo/filter"
 	"github.com/gabrielseibel1/fungo/fold"
+	"github.com/gabrielseibel1/fungo/types"
 	"github.com/gabrielseibel1/fungo/zip"
-	"log/slog"
 	"slices"
 	"strings"
 )
+
+// TODO rename test methods
 
 func main() {
 	d := []int{-4, -3, -2, -1, 0, 1, 2, 3, 4}
@@ -20,7 +22,7 @@ func main() {
 	slices.Sort(s1)
 	s2 := conv.MapValuesToSlice(m2)
 	slices.Sort(s2)
-	z := zip.Slices(s1, s2)
+	z := zip.SlicesToPairs(s1, s2)
 	a := apply.ToSlice(z, repeatString)
 	containsO := func(s string) bool { return strings.Contains(s, "o") }
 	f := filter.Slice(a, containsO)
@@ -38,20 +40,6 @@ func main() {
 		return i == 0
 	})
 	if !at {
-		slog.Error("failure",
-			"d", d,
-			"m1", m1,
-			"m2", m2,
-			"s1", s1,
-			"s2", s2,
-			"z", z,
-			"a", a,
-			"f", f,
-			"b1", b1,
-			"b2", b2,
-			"bs", bs,
-			"at", at,
-		)
 		panic("failure")
 	}
 	println("success")
@@ -91,7 +79,7 @@ func numText(i int) string {
 		return "?"
 	}
 }
-func repeatString(t conv.Pair[int, string]) string {
+func repeatString(t types.Pair[int, string]) string {
 	s := t.V
 	for i := 0; i < t.K; i++ {
 		s += s

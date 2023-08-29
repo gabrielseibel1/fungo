@@ -1,6 +1,7 @@
 package conv
 
 import (
+	"github.com/gabrielseibel1/fungo/types"
 	"reflect"
 	"slices"
 	"strconv"
@@ -217,7 +218,7 @@ func TestMapToPairs(t *testing.T) {
 	type testCase[T comparable, U any] struct {
 		name string
 		args args[T, U]
-		want []Pair[T, U]
+		want []types.Pair[T, U]
 	}
 	tests := []testCase[string, int]{
 		{
@@ -225,27 +226,27 @@ func TestMapToPairs(t *testing.T) {
 			args: args[string, int]{
 				m: nil,
 			},
-			want: []Pair[string, int]{},
+			want: []types.Pair[string, int]{},
 		},
 		{
 			name: "some",
 			args: args[string, int]{
 				m: map[string]int{"0": 0, "1": 1, "2": 2},
 			},
-			want: []Pair[string, int]{{"0", 0}, {"1", 1}, {"2", 2}},
+			want: []types.Pair[string, int]{{K: "0"}, {K: "1", V: 1}, {K: "2", V: 2}},
 		},
 		{
 			name: "other",
 			args: args[string, int]{
 				m: map[string]int{"-1": 1, "0": 0, "1": 1},
 			},
-			want: []Pair[string, int]{{"-1", 1}, {"0", 0}, {"1", 1}},
+			want: []types.Pair[string, int]{{K: "-1", V: 1}, {K: "0"}, {K: "1", V: 1}},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := MapToPairs(tt.args.m)
-			f := func(a, b Pair[string, int]) int {
+			f := func(a, b types.Pair[string, int]) int {
 				if a.K < b.K {
 					return -1
 				}
@@ -257,7 +258,124 @@ func TestMapToPairs(t *testing.T) {
 			slices.SortFunc(tt.want, f)
 			slices.SortFunc(got, f)
 			if !slices.Equal(got, tt.want) {
-				t.Errorf("MapToPairs() = %v, want %v", got, tt.want)
+				t.Errorf("MapToPairss() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPairsToMap(t *testing.T) {
+	type args[T comparable, U any] struct {
+		p []types.Pair[T, U]
+	}
+	type testCase[T comparable, U any] struct {
+		name string
+		args args[T, U]
+		want map[T]U
+	}
+	tests := []testCase[int, string]{
+		{
+			name: "empty",
+			args: args[int, string]{},
+			want: map[int]string{},
+		},
+		{
+			name: "unique numbers",
+			args: args[int, string]{
+				p: []types.Pair[int, string]{{K: 1, V: "1"}, {K: 2, V: "2"}},
+			},
+			want: map[int]string{1: "1", 2: "2"},
+		},
+		{
+			name: "repeated numbers",
+			args: args[int, string]{
+				p: []types.Pair[int, string]{{K: 1, V: "1"}, {K: 1, V: "2"}},
+			},
+			want: map[int]string{1: "2"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := PairsToMap(tt.args.p); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("PairssToMap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPairsKeysToSlice(t *testing.T) {
+	type args[T any, U any] struct {
+		p []types.Pair[T, U]
+	}
+	type testCase[T any, U any] struct {
+		name string
+		args args[T, U]
+		want []T
+	}
+	tests := []testCase[int, string]{
+		{
+			name: "empty",
+			args: args[int, string]{},
+			want: []int{},
+		},
+		{
+			name: "unique numbers",
+			args: args[int, string]{
+				p: []types.Pair[int, string]{{K: 1, V: "1"}, {K: 2, V: "2"}},
+			},
+			want: []int{1, 2},
+		},
+		{
+			name: "repeated numbers",
+			args: args[int, string]{
+				p: []types.Pair[int, string]{{K: 1, V: "1"}, {K: 1, V: "2"}},
+			},
+			want: []int{1, 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := PairsKeysToSlice(tt.args.p); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("PairssKeysToSlice() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPairsValuesToSlice(t *testing.T) {
+	type args[T any, U any] struct {
+		p []types.Pair[T, U]
+	}
+	type testCase[T any, U any] struct {
+		name string
+		args args[T, U]
+		want []U
+	}
+	tests := []testCase[int, string]{
+		{
+			name: "empty",
+			args: args[int, string]{},
+			want: []string{},
+		},
+		{
+			name: "unique numbers",
+			args: args[int, string]{
+				p: []types.Pair[int, string]{{K: 1, V: "1"}, {K: 2, V: "2"}},
+			},
+			want: []string{"1", "2"},
+		},
+		{
+			name: "repeated numbers",
+			args: args[int, string]{
+				p: []types.Pair[int, string]{{K: 1, V: "1"}, {K: 2, V: "1"}},
+			},
+			want: []string{"1", "1"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := PairsValuesToSlice(tt.args.p); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("PairssValuesToSlice() = %v, want %v", got, tt.want)
 			}
 		})
 	}

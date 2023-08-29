@@ -1,5 +1,7 @@
 package conv
 
+import "github.com/gabrielseibel1/fungo/types"
+
 func SliceToMapWithIndices[T any](s []T) map[int]T {
 	r := make(map[int]T)
 	for i, e := range s {
@@ -24,11 +26,6 @@ func SliceToMapValues[T any, U comparable](s []T, k func(T) U) map[U]T {
 	return r
 }
 
-type Pair[K, V any] struct {
-	K K
-	V V
-}
-
 func MapKeysToSlice[T comparable, U any](m map[T]U) []T {
 	r := make([]T, 0, len(m))
 	for k := range m {
@@ -45,12 +42,34 @@ func MapValuesToSlice[T comparable, U any](m map[T]U) []U {
 	return r
 }
 
-func MapToPairs[T comparable, U any](m map[T]U) []Pair[T, U] {
-	r := make([]Pair[T, U], 0, len(m))
+func MapToPairs[T comparable, U any](m map[T]U) []types.Pair[T, U] {
+	r := make([]types.Pair[T, U], 0, len(m))
 	for k, v := range m {
-		r = append(r, Pair[T, U]{k, v})
+		r = append(r, types.Pair[T, U]{K: k, V: v})
 	}
 	return r
 }
 
-// TODO conv pairs to map
+func PairsToMap[T comparable, U any](p []types.Pair[T, U]) map[T]U {
+	r := make(map[T]U)
+	for _, e := range p {
+		r[e.K] = e.V
+	}
+	return r
+}
+
+func PairsKeysToSlice[T any, U any](p []types.Pair[T, U]) []T {
+	r := make([]T, len(p))
+	for i, e := range p {
+		r[i] = e.K
+	}
+	return r
+}
+
+func PairsValuesToSlice[T any, U any](p []types.Pair[T, U]) []U {
+	r := make([]U, len(p))
+	for i, e := range p {
+		r[i] = e.V
+	}
+	return r
+}
