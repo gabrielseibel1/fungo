@@ -1,6 +1,7 @@
-package fold
+package fold_test
 
 import (
+	"github.com/gabrielseibel1/fungo/fold"
 	"math"
 	"reflect"
 	"testing"
@@ -67,7 +68,7 @@ func TestSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Slice(tt.args.s, tt.args.i, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := fold.Slice(tt.args.s, tt.args.i, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Slice() = %v, want %v", got, tt.want)
 			}
 		})

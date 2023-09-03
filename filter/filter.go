@@ -1,5 +1,8 @@
 package filter
 
+// TODO indexed
+
+// Slice filters a slice by a function, returning another slice with only the elements that satisfy the function condition
 func Slice[T any](s []T, f func(T) bool) []T {
 	r := make([]T, 0)
 	for _, v := range s {
@@ -10,6 +13,8 @@ func Slice[T any](s []T, f func(T) bool) []T {
 	return r
 }
 
+// Channel filters a channel by a function, returning another channel with only the elements that satisfy the function condition
+// Does not consume the whole channel, works "on demand"
 func Channel[T any](c <-chan T, f func(T) bool) chan T {
 	r := make(chan T)
 	go func(in <-chan T, out chan<- T) {
@@ -23,6 +28,7 @@ func Channel[T any](c <-chan T, f func(T) bool) chan T {
 	return r
 }
 
+// MapByKeys filters a map by a function, returning another map with only the keys satisfy the function condition
 func MapByKeys[T comparable, U any](m map[T]U, f func(T) bool) map[T]U {
 	r := make(map[T]U)
 	for k, v := range m {
@@ -33,6 +39,7 @@ func MapByKeys[T comparable, U any](m map[T]U, f func(T) bool) map[T]U {
 	return r
 }
 
+// MapByValues filters a map by a function, returning another map with only the values satisfy the function condition
 func MapByValues[T comparable, U any](m map[T]U, f func(U) bool) map[T]U {
 	r := make(map[T]U)
 	for k, v := range m {

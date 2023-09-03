@@ -1,6 +1,7 @@
-package check
+package check_test
 
 import (
+	"github.com/gabrielseibel1/fungo/check"
 	"github.com/gabrielseibel1/fungo/util"
 	"testing"
 )
@@ -43,7 +44,7 @@ func TestSome(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Some(tt.args.s, tt.args.f); got != tt.want {
+			if got := check.Some(tt.args.s, tt.args.f); got != tt.want {
 				t.Errorf("Some() = %v, want %v", got, tt.want)
 			}
 		})
@@ -88,7 +89,7 @@ func TestNone(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := None(tt.args.s, tt.args.f); got != tt.want {
+			if got := check.None(tt.args.s, tt.args.f); got != tt.want {
 				t.Errorf("Some() = %v, want %v", got, tt.want)
 			}
 		})
@@ -118,7 +119,7 @@ func TestNoKey(t *testing.T) {
 			name: "some",
 			args: args[string, int]{
 				m: map[string]int{"1": 1, "b": 2},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: false,
 		},
@@ -126,14 +127,14 @@ func TestNoKey(t *testing.T) {
 			name: "none",
 			args: args[string, int]{
 				m: map[string]int{"a": 1, "b": 2},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NoKey(tt.args.m, tt.args.f); got != tt.want {
+			if got := check.NoKey(tt.args.m, tt.args.f); got != tt.want {
 				t.Errorf("NoKey() = %v, want %v", got, tt.want)
 			}
 		})
@@ -163,7 +164,7 @@ func TestNoValue(t *testing.T) {
 			name: "some",
 			args: args[int, string]{
 				m: map[int]string{1: "1", 2: "b"},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: false,
 		},
@@ -171,14 +172,14 @@ func TestNoValue(t *testing.T) {
 			name: "nome",
 			args: args[int, string]{
 				m: map[int]string{1: "a", 2: "b"},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NoValue(tt.args.m, tt.args.f); got != tt.want {
+			if got := check.NoValue(tt.args.m, tt.args.f); got != tt.want {
 				t.Errorf("NoValue() = %v, want %v", got, tt.want)
 			}
 		})
@@ -208,7 +209,7 @@ func TestSomeKey(t *testing.T) {
 			name: "some",
 			args: args[string, int]{
 				m: map[string]int{"1": 1, "b": 2},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: true,
 		},
@@ -216,14 +217,14 @@ func TestSomeKey(t *testing.T) {
 			name: "none",
 			args: args[string, int]{
 				m: map[string]int{"a": 1, "b": 2},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SomeKey(tt.args.m, tt.args.f); got != tt.want {
+			if got := check.SomeKey(tt.args.m, tt.args.f); got != tt.want {
 				t.Errorf("SomeKey() = %v, want %v", got, tt.want)
 			}
 		})
@@ -253,7 +254,7 @@ func TestSomeValue(t *testing.T) {
 			name: "some",
 			args: args[int, string]{
 				m: map[int]string{1: "1", 2: "b"},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: true,
 		},
@@ -261,14 +262,14 @@ func TestSomeValue(t *testing.T) {
 			name: "nome",
 			args: args[int, string]{
 				m: map[int]string{1: "a", 2: "b"},
-				f: util.IsNumber,
+				f: util.IsInt,
 			},
 			want: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SomeValue(tt.args.m, tt.args.f); got != tt.want {
+			if got := check.SomeValue(tt.args.m, tt.args.f); got != tt.want {
 				t.Errorf("SomeValue() = %v, want %v", got, tt.want)
 			}
 		})

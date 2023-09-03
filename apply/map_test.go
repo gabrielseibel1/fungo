@@ -1,6 +1,7 @@
-package apply
+package apply_test
 
 import (
+	"github.com/gabrielseibel1/fungo/apply"
 	"github.com/gabrielseibel1/fungo/util"
 	"reflect"
 	"strconv"
@@ -53,7 +54,7 @@ func TestToSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToSlice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := apply.ToSlice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ToSlice() = %v, want %v", got, tt.want)
 			}
 		})
@@ -90,7 +91,7 @@ func TestToKeys(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToKeys(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := apply.ToKeys(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ToKeys() = %v, want %v", got, tt.want)
 			}
 		})
@@ -127,7 +128,7 @@ func TestToValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToValues(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := apply.ToValues(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ToValues() = %v, want %v", got, tt.want)
 			}
 		})
@@ -143,7 +144,7 @@ func TestToChannel(t *testing.T) {
 	}
 	t.Run("empty", func(t *testing.T) {
 		o := make(chan int)
-		m := ToChannel(o, func(i int) bool { return i%2 == 0 })
+		m := apply.ToChannel(o, func(i int) bool { return i%2 == 0 })
 		go func() { putX(o, 0) }()
 		for e := range m {
 			t.Errorf("expected no elements, got element %t", e)
@@ -151,7 +152,7 @@ func TestToChannel(t *testing.T) {
 	})
 	t.Run("map to is even", func(t *testing.T) {
 		o := make(chan int)
-		m := ToChannel(o, func(i int) bool { return i%2 == 0 })
+		m := apply.ToChannel(o, func(i int) bool { return i%2 == 0 })
 		go func() { putX(o, 10) }()
 		even := true
 		for e := range m {

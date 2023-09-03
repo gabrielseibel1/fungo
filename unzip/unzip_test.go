@@ -1,7 +1,8 @@
-package unzip
+package unzip_test
 
 import (
 	"github.com/gabrielseibel1/fungo/types"
+	"github.com/gabrielseibel1/fungo/unzip"
 	"reflect"
 	"slices"
 	"testing"
@@ -35,7 +36,7 @@ func TestMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got1, got2 := Map(tt.args.m)
+			got1, got2 := unzip.Map(tt.args.m)
 			slices.Sort(got1)
 			slices.SortFunc(got2, func(a, b bool) int {
 				if a && !b {
@@ -86,7 +87,7 @@ func TestPairs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := Pairs(tt.args.p)
+			got, got1 := unzip.Pairs(tt.args.p)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Pairs() got = %v, want %v", got, tt.want)
 			}

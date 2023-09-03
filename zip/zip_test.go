@@ -1,7 +1,8 @@
-package zip
+package zip_test
 
 import (
 	"github.com/gabrielseibel1/fungo/types"
+	"github.com/gabrielseibel1/fungo/zip"
 	"reflect"
 	"testing"
 )
@@ -57,7 +58,7 @@ func TestSlicesToPairs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SlicesToPairs(tt.args.t, tt.args.u); !reflect.DeepEqual(got, tt.want) {
+			if got := zip.SlicesToPairs(tt.args.t, tt.args.u); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SlicesToPairss() = %v, want %v", got, tt.want)
 			}
 		})
@@ -99,7 +100,7 @@ func TestSlicesToMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SlicesToMap(tt.args.t, tt.args.u); !reflect.DeepEqual(got, tt.want) {
+			if got := zip.SlicesToMap(tt.args.t, tt.args.u); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SlicesToMap() = %v, want %v", got, tt.want)
 			}
 		})

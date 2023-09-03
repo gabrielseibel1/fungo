@@ -1,6 +1,7 @@
-package filter
+package filter_test
 
 import (
+	"github.com/gabrielseibel1/fungo/filter"
 	"github.com/gabrielseibel1/fungo/util"
 	"reflect"
 	"testing"
@@ -75,7 +76,7 @@ func TestSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Slice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := filter.Slice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Slice() = %v, want %v", got, tt.want)
 			}
 		})
@@ -114,7 +115,7 @@ func TestMapByKeys(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapByKeys(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := filter.MapByKeys(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MapByValues() = %v, want %v", got, tt.want)
 			}
 		})
@@ -153,7 +154,7 @@ func TestMapByValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapByValues(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+			if got := filter.MapByValues(tt.args.m, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MapByValues() = %v, want %v", got, tt.want)
 			}
 		})
@@ -169,7 +170,7 @@ func TestChannel(t *testing.T) {
 	}
 	t.Run("empty", func(t *testing.T) {
 		unfiltered := make(chan int)
-		filtered := Channel(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered := filter.Channel(unfiltered, func(i int) bool { return i%2 == 0 })
 		go func() { putX(unfiltered, 0) }()
 		for e := range filtered {
 			t.Errorf("expected no elements, got element %d", e)
@@ -177,7 +178,7 @@ func TestChannel(t *testing.T) {
 	})
 	t.Run("filter even", func(t *testing.T) {
 		unfiltered := make(chan int)
-		filtered := Channel(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered := filter.Channel(unfiltered, func(i int) bool { return i%2 == 0 })
 		go func() { putX(unfiltered, 4) }()
 		i := 0
 		for e := range filtered {
@@ -189,8 +190,8 @@ func TestChannel(t *testing.T) {
 	})
 	t.Run("filter even then div by 4", func(t *testing.T) {
 		unfiltered := make(chan int)
-		filtered1 := Channel(unfiltered, func(i int) bool { return i%2 == 0 })
-		filtered2 := Channel(filtered1, func(i int) bool { return i%4 == 0 })
+		filtered1 := filter.Channel(unfiltered, func(i int) bool { return i%2 == 0 })
+		filtered2 := filter.Channel(filtered1, func(i int) bool { return i%4 == 0 })
 		go func() { putX(unfiltered, 21) }()
 		i := 0
 		for e := range filtered2 {

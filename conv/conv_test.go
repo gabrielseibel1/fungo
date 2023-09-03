@@ -1,6 +1,7 @@
-package conv
+package conv_test
 
 import (
+	"github.com/gabrielseibel1/fungo/conv"
 	"github.com/gabrielseibel1/fungo/types"
 	"reflect"
 	"slices"
@@ -42,7 +43,7 @@ func TestSliceToMapWithIndices(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SliceToMapWithIndices(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+			if got := conv.SliceToMapWithIndices(tt.args.s); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SliceToMapWithIndices() = %v, want %v", got, tt.want)
 			}
 		})
@@ -79,7 +80,7 @@ func TestSliceToMapKeys(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SliceToMapKeys(tt.args.s, tt.args.v); !reflect.DeepEqual(got, tt.want) {
+			if got := conv.SliceToMapKeys(tt.args.s, tt.args.v); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SliceToMapKeys() = %v, want %v", got, tt.want)
 			}
 		})
@@ -116,7 +117,7 @@ func TestSliceToMapValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SliceToMapValues(tt.args.s, tt.args.k); !reflect.DeepEqual(got, tt.want) {
+			if got := conv.SliceToMapValues(tt.args.s, tt.args.k); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SliceToMapValues() = %v, want %v", got, tt.want)
 			}
 		})
@@ -157,7 +158,7 @@ func TestMapKeysToSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MapKeysToSlice(tt.args.m)
+			got := conv.MapKeysToSlice(tt.args.m)
 			slices.Sort(tt.want)
 			slices.Sort(got)
 			if !slices.Equal(got, tt.want) {
@@ -201,7 +202,7 @@ func TestMapValuesToSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MapValuesToSlice(tt.args.m)
+			got := conv.MapValuesToSlice(tt.args.m)
 			slices.Sort(tt.want)
 			slices.Sort(got)
 			if !slices.Equal(got, tt.want) {
@@ -245,7 +246,7 @@ func TestMapToPairs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MapToPairs(tt.args.m)
+			got := conv.MapToPairs(tt.args.m)
 			f := func(a, b types.Pair[string, int]) int {
 				if a.K < b.K {
 					return -1
@@ -296,7 +297,7 @@ func TestPairsToMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := PairsToMap(tt.args.p); !reflect.DeepEqual(got, tt.want) {
+			if got := conv.PairsToMap(tt.args.p); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("PairssToMap() = %v, want %v", got, tt.want)
 			}
 		})
@@ -335,7 +336,7 @@ func TestPairsKeysToSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := PairsKeysToSlice(tt.args.p); !reflect.DeepEqual(got, tt.want) {
+			if got := conv.PairsKeysToSlice(tt.args.p); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("PairssKeysToSlice() = %v, want %v", got, tt.want)
 			}
 		})
@@ -374,7 +375,7 @@ func TestPairsValuesToSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := PairsValuesToSlice(tt.args.p); !reflect.DeepEqual(got, tt.want) {
+			if got := conv.PairsValuesToSlice(tt.args.p); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("PairssValuesToSlice() = %v, want %v", got, tt.want)
 			}
 		})
