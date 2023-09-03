@@ -1,8 +1,7 @@
-package fold
-
+// Package fold has functions to aggregate/reduce elements in slices
 // TODO indexed
-
 // TODO map
+package fold
 
 // Slice incrementally combines a seed value and then values returned by a function applied to the slice elements,
 // reducing the slice down to a single value, which is returned

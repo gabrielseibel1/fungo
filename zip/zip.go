@@ -1,3 +1,4 @@
+// Package zip has functions to zip pairs of slices into slices of pairs or maps
 package zip
 
 import "github.com/gabrielseibel1/fungo/types"

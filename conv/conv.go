@@ -1,8 +1,8 @@
+// Package conv has functions to convert between slices and maps
+// TODO indexed
 package conv
 
 import "github.com/gabrielseibel1/fungo/types"
-
-// TODO indexed
 
 // SliceToMapWithIndices converts a slice to a map, with keys as the slice's indices, and values as the slice's elements
 func SliceToMapWithIndices[T any](s []T) map[int]T {

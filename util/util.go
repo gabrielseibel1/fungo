@@ -1,3 +1,4 @@
+// Package util has internal types, values and functions for tests
 package util
 
 import (

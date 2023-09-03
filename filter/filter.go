@@ -1,6 +1,6 @@
-package filter
-
+// Package filter has functions to filter slices, maps, and channels by some condition
 // TODO indexed
+package filter
 
 // Slice filters a slice by a function, returning another slice with only the elements that satisfy the function condition
 func Slice[T any](s []T, f func(T) bool) []T {

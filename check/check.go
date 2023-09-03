@@ -1,7 +1,7 @@
-package check
-
+// Package check has functions to check if some condition is valid for slices and maps
 // TODO indexed
 // TODO all
+package check
 
 // Some checks that the provided slice has any element that satisfies the checker function
 func Some[T any](s []T, f func(T) bool) bool {

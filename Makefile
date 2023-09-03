@@ -1,6 +1,6 @@
 all: verify
 
-verify: vet check test run
+verify: vet check test
 
 .PHONY: vet
 vet:
@@ -13,7 +13,3 @@ check:
 .PHONY: test
 test:
 	go test --count 1 --cover --coverprofile=./cover.out ./...
-
-.PHONY: run
-run:
-	go run .

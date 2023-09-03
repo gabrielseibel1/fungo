@@ -1,3 +1,4 @@
+// Package unzip has functions to unzip slices and maps into pairs of slices
 package unzip
 
 import "github.com/gabrielseibel1/fungo/types"

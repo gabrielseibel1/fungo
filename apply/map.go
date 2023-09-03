@@ -1,6 +1,6 @@
-package apply
-
+// Package apply has functions to apply transformations to slices, maps, and channels
 // TODO indexed
+package apply
 
 // ToSlice applies a transforming function to a slice's elements, returning a slice with the return type of the function
 func ToSlice[T, U any](s []T, f func(T) U) []U {
