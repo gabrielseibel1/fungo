@@ -1,12 +1,24 @@
 // Package filter has functions to filter slices, maps, and channels by some condition
-// TODO indexed
 package filter
 
-// Slice filters a slice by a function, returning another slice with only the elements that satisfy the function condition
+// Slice filters a slice by a function that takes an element an returns a bool,
+// returning another slice with only the elements that satisfy the function condition
 func Slice[T any](s []T, f func(T) bool) []T {
 	r := make([]T, 0)
 	for _, v := range s {
 		if f(v) {
+			r = append(r, v)
+		}
+	}
+	return r
+}
+
+// SliceIndexed filters a slice by a function that takes an index and an element and returns a bool,
+// returning another slice with only the elements that satisfy the function condition
+func SliceIndexed[T any](s []T, f func(int, T) bool) []T {
+	r := make([]T, 0)
+	for i, v := range s {
+		if f(i, v) {
 			r = append(r, v)
 		}
 	}
@@ -29,6 +41,7 @@ func Channel[T any](c <-chan T, f func(T) bool) chan T {
 }
 
 // MapByKeys filters a map by a function, returning another map with only the keys satisfy the function condition
+// TODO just "Map", with keys and values passed to func
 func MapByKeys[T comparable, U any](m map[T]U, f func(T) bool) map[T]U {
 	r := make(map[T]U)
 	for k, v := range m {

@@ -47,13 +47,26 @@ var (
 // PassAll is a function that always returns true for any type and value provided, useful for tests
 func PassAll[T any](T) bool { return true }
 
+// PassAllIndexed is a function that always returns true for any type and value provided, useful for tests
+func PassAllIndexed[T any](int, T) bool { return true }
+
 // PassNo is a function that always returns false for any type and value provided, useful for tests
 func PassNo[T any](T) bool { return false }
+
+// PassNoIndexed is a function that always returns false for any type and value provided, useful for tests
+func PassNoIndexed[T any](int, T) bool { return false }
 
 // Is can be used to know whether an element is equal to another by reflect.DeepEqual
 func Is[T any](t T) func(T) bool {
 	return func(u T) bool {
 		return reflect.DeepEqual(t, u)
+	}
+}
+
+// IsIndexed can be used to know whether an element is equal to another by reflect.DeepEqual as is in an index i
+func IsIndexed[T any](i int, t T) func(int, T) bool {
+	return func(j int, u T) bool {
+		return j == i && reflect.DeepEqual(t, u)
 	}
 }
 

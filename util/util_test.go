@@ -191,3 +191,144 @@ func TestIs(t *testing.T) {
 		})
 	}
 }
+
+func TestPassAllIndexed(t *testing.T) {
+	type args[T any] struct {
+		in0 int
+		in1 T
+	}
+	type testCase[T any] struct {
+		name string
+		args args[T]
+		want bool
+	}
+	tests := []testCase[string]{
+		{
+			name: "zero",
+			args: args[string]{},
+			want: true,
+		},
+		{
+			name: "random",
+			args: args[string]{
+				in0: 42,
+				in1: "42and87",
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := util.PassAllIndexed(tt.args.in0, tt.args.in1); got != tt.want {
+				t.Errorf("PassAllIndexed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPassNoIndexed(t *testing.T) {
+	type args[T any] struct {
+		in0 int
+		in1 T
+	}
+	type testCase[T any] struct {
+		name string
+		args args[T]
+		want bool
+	}
+	tests := []testCase[string]{
+		{
+			name: "zero",
+			args: args[string]{},
+			want: false,
+		},
+		{
+			name: "random",
+			args: args[string]{
+				in0: 42,
+				in1: "42and87",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := util.PassNoIndexed(tt.args.in0, tt.args.in1); got != tt.want {
+				t.Errorf("PassAllIndexed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsIndexed(t *testing.T) {
+	type args[T any] struct {
+		i int
+		t T
+	}
+	type testCase[T any] struct {
+		name string
+		args args[T]
+		j    int
+		u    T
+		want bool
+	}
+	tests := []testCase[util.Data]{
+		{
+			name: "data 1",
+			args: args[util.Data]{
+				i: 0,
+				t: util.Data1,
+			},
+			j:    0,
+			u:    util.Data1,
+			want: true,
+		},
+		{
+			name: "data 2",
+			args: args[util.Data]{
+				i: 1,
+				t: util.Data2,
+			},
+			j:    1,
+			u:    util.Data2,
+			want: true,
+		},
+		{
+			name: "mismatch index",
+			args: args[util.Data]{
+				i: 0,
+				t: util.Data1,
+			},
+			j:    1,
+			u:    util.Data1,
+			want: false,
+		},
+		{
+			name: "mismatch elements",
+			args: args[util.Data]{
+				i: 0,
+				t: util.Data1,
+			},
+			j:    0,
+			u:    util.Data2,
+			want: false,
+		},
+		{
+			name: "mismatch all",
+			args: args[util.Data]{
+				i: 0,
+				t: util.Data1,
+			},
+			j:    1,
+			u:    util.Data2,
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := util.IsIndexed(tt.args.i, tt.args.t)(tt.j, tt.u); !got == tt.want {
+				t.Errorf("IsIndexed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
