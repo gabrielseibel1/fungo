@@ -72,9 +72,21 @@ func IsIndexed[T any](i int, t T) func(int, T) bool {
 
 // DataToRecord gets a Record1 if provided Data1, or Record2 if provided Data2
 func DataToRecord(d Data) Record {
-	if d.V == Data1.V {
+	switch d.V {
+	case Data1.V:
 		return Record1
-	} else if d.V == Data2.V {
+	case Data2.V:
+		return Record2
+	default:
+		return Record{}
+	}
+}
+
+// DataToRecordIndexed is like DataToRecord but uses the index as well
+func DataToRecordIndexed(i int, d Data) Record {
+	if d.V == Data1.V && i == 0 {
+		return Record1
+	} else if d.V == Data2.V && i == 1 {
 		return Record2
 	} else {
 		return Record{}

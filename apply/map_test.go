@@ -1,11 +1,13 @@
 package apply_test
 
 import (
-	"github.com/gabrielseibel1/fungo/apply"
-	"github.com/gabrielseibel1/fungo/util"
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/gabrielseibel1/fungo/apply"
+	"github.com/gabrielseibel1/fungo/types"
+	"github.com/gabrielseibel1/fungo/util"
 )
 
 func TestToSlice(t *testing.T) {
@@ -55,6 +57,59 @@ func TestToSlice(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := apply.ToSlice(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToSlice() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestToSliceIndexed(t *testing.T) {
+	type args[T any, U any] struct {
+		s []T
+		f func(int, T) U
+	}
+	type testCase[T any, U any] struct {
+		name string
+		args args[T, U]
+		want []U
+	}
+	tests := []testCase[util.Data, util.Record]{
+		{
+			name: "empty",
+			args: args[util.Data, util.Record]{
+				s: []util.Data{},
+				f: util.DataToRecordIndexed,
+			},
+			want: []util.Record{},
+		},
+		{
+			name: "nil",
+			args: args[util.Data, util.Record]{
+				s: nil,
+				f: util.DataToRecordIndexed,
+			},
+			want: []util.Record{},
+		},
+		{
+			name: "one",
+			args: args[util.Data, util.Record]{
+				s: []util.Data{util.Data1},
+				f: util.DataToRecordIndexed,
+			},
+			want: []util.Record{util.Record1},
+		},
+		{
+			name: "two",
+			args: args[util.Data, util.Record]{
+				s: []util.Data{util.Data1, util.Data2},
+				f: util.DataToRecordIndexed,
+			},
+			want: []util.Record{util.Record1, util.Record2},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := apply.ToSliceIndexed(tt.args.s, tt.args.f); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ToSlice() = %v, want %v", got, tt.want)
 			}
 		})
@@ -162,4 +217,50 @@ func TestToChannel(t *testing.T) {
 			even = !even
 		}
 	})
+}
+
+func TestToPairs(t *testing.T) {
+	type args[T, U, V, W any] struct {
+		p []types.Pair[T, U]
+		f func(types.Pair[T, U]) types.Pair[V, W]
+	}
+	type testCase[T, U, V, W any] struct {
+		name string
+		args args[T, U, V, W]
+		want []types.Pair[V, W]
+	}
+	tests := []testCase[int, bool, string, byte]{
+		{
+			name: "int-bool to string-byte",
+			args: args[int, bool, string, byte]{
+				p: []types.Pair[int, bool]{
+					{K: 1, V: true},
+					{K: 0, V: false},
+				},
+				f: func(p types.Pair[int, bool]) types.Pair[string, byte] {
+					var b byte
+					if p.V {
+						b = byte(1)
+					} else {
+						b = byte(0)
+					}
+					return types.Pair[string, byte]{
+						K: strconv.Itoa(p.K),
+						V: b,
+					}
+				},
+			},
+			want: []types.Pair[string, byte]{
+				{K: "1", V: byte(1)},
+				{K: "0", V: byte(0)},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := apply.ToPairs(tt.args.p, tt.args.f); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToPairs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
